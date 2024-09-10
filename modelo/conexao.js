@@ -5,7 +5,7 @@ const options = {
 }
 
 banco
-    .connect("mongodb://localhost:27017/", options)
+    .connect("mongodb://localhost:27017/livraria", options)
     .then(() => console.log("Conectado ao MongoDB!"))
     .catch((error) => console.log(`Erro: ${error}}`));
 
