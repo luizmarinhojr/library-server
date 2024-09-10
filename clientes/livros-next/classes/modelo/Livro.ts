@@ -1,11 +1,11 @@
 class Livro {
-    codigo: number;
-    codEditora: number;
-    titulo: string;
-    resumo: string;
-    autores: string[];
+    codigo: String | null;
+    codEditora: Number;
+    titulo: String;
+    resumo: String;
+    autores: String[];
 
-    constructor(codigo: number, codEditora: number, titulo: string, resumo: string, autores: string[]) {
+    constructor(codigo: String, codEditora: Number, titulo: String, resumo: String, autores: String[]) {
         this.codigo = codigo;
         this.codEditora = codEditora;
         this.titulo = titulo;

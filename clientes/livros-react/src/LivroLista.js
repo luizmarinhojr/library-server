@@ -28,9 +28,10 @@ const LivroLista = () => {
 
     useEffect(() => {
         const fetchLivros = async () => {
-            const livrosObtidos = await controleLivro.obterLivros()
-            setLivros(livrosObtidos);
-            setCarregado(true);
+            await controleLivro.obterLivros().then((livrosObtidos) => {
+                setLivros(livrosObtidos);
+                setCarregado(true);
+            });
         };
 
         if (!carregado) {

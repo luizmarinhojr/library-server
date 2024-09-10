@@ -5,37 +5,33 @@ import Livro from '@/classes/modelo/Livro';
 import Head from 'next/head';
 import { Menu } from '@/componentes/Menu';
 import { LinhaLivro } from '@/componentes/LinhaLivro';
+import ControleLivros from '@/classes/controle/ControleLivros';
 
 
-const baseURL: string = 'http://localhost:3000/api/livros';
-
-const obter = async () => {
-    let resposta = await fetch(baseURL);
-    return await resposta.json();
-}
-
-const excluirLivro = async (codigo: number) => {
-    const resposta = await fetch(`${baseURL}/${codigo}`, { method: 'DELETE' });
-    return resposta.ok;
-}
+const controleLivros = new ControleLivros();
 
 const LivroLista: NextPage = () => {
     const [livros, setLivros] = useState<Array<Livro>>([]);
     const [carregado, setCarregado] = useState<boolean>(false);
 
     useEffect(() => {
-        if (!carregado) {
-            obter().then(dados => {
-                setLivros(dados);
+        const fetchLivros = async () => {
+            await controleLivros.obterLivros().then((livrosObtidos) => {
+                setLivros(livrosObtidos);
                 setCarregado(true);
             });
         }
+
+        if (!carregado) {
+            fetchLivros();
+        }
     }, [carregado]);
 
-    const excluir = (codigo: number) => {
-        excluirLivro(codigo).then(() => setCarregado(false));
+    const excluir = (codigo: String) => {
+        controleLivros.excluir(codigo).then(() => {
+            setCarregado(false);
+        });
     }
-
 
     return (
         <>
@@ -59,11 +55,11 @@ const LivroLista: NextPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {livros.map((livro) => (
+                        {livros.map((livro, index) => (
                             <LinhaLivro 
-                                key={livro.codigo}
+                                key={index}
                                 livro={livro}
-                                excluir={() => excluir(livro.codigo)}
+                                excluir={ () => excluir(`${livro.codigo}`) }
                             />
                         ))}
                     </tbody>
