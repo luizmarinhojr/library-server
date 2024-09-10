@@ -30,15 +30,15 @@ const LivroDados = () => {
         evento.preventDefault();
 
         const novoLivro = new Livro(
-            0,
+            "",
             codEditora,
             titulo,
             resumo,
             autores.split("\n")
         );
 
-        controleLivro.incluir(novoLivro);
-        navigate("/")
+        controleLivro.incluir(novoLivro)
+            .then(navigate("/"));
     }
 
     return (

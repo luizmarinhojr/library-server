@@ -13,7 +13,7 @@ function LinhaLivro(props) {
     return (
         <>
             <tr>
-                <td className="d-flex flex-column align-items-start">{props.livro.titulo}<button className="btn btn-danger" onClick={() => props.excluir(props.livro.codigo)}>Excluir</button></td>
+                <td className="d-flex flex-column align-items-start">{props.livro.titulo}<button className="btn btn-danger" onClick={() => props.excluir(props.livro._id)}>Excluir</button></td>
                 <td>{props.livro.resumo}</td>
                 <td>{nomeEditora}</td>
                 <td><ul>{props.livro.autores.map((autor, index) => <li key={index}>{autor}</li>)}</ul></td>
@@ -27,16 +27,19 @@ const LivroLista = () => {
     const [carregado, setCarregado] = useState(false);
 
     useEffect(() => {
+        const fetchLivros = async () => {
+            const livrosObtidos = await controleLivro.obterLivros()
+            setLivros(livrosObtidos);
+            setCarregado(true);
+        };
+
         if (!carregado) {
-          const livrosObtidos = controleLivro.obterLivros();
-          setLivros(livrosObtidos);
-          setCarregado(true);
+          fetchLivros();
         }
       }, [carregado]);
     
-    const excluir = (codigo) => {
-        controleLivro.excluir(codigo);
-        console.log(codigo);
+    const excluir = async (codigo) => {
+        await controleLivro.excluir(codigo)
         setCarregado(false); 
     };
 
@@ -54,9 +57,9 @@ const LivroLista = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {livros.map((livro) => (
+                        {livros.map((livro, index) => (
                             <LinhaLivro 
-                                key={livro.codigo}
+                                key={index}
                                 livro={livro}
                                 excluir={excluir}
                             />

@@ -1,42 +1,51 @@
 import Livro from "../modelo/Livro";
 
-const livros: Array<Livro> = [
-    {
-        codigo: 1,
-        codEditora: 3,
-        titulo: "Use a cabeça: Java",
-        resumo: "Use a cabeça! Java é uma experiência completa de aprendizado em programação orientada a objetos (OO) e Java.",
-        autores: ["Bert Bates", "Kathy Sierra"]
-    },
-    {
-        codigo: 2,
-        codEditora: 2,
-        titulo: "Java, como Programar",
-        resumo: "Milhões de alunos e profissionais aprenderam programação e desenvolvimento de software com os livros Deitel",
-        autores: ["Paul Deitel", "Harvey Deitel"]
-    },
-    {
-        codigo: 3,
-        codEditora: 1,
-        titulo: "Core Java for the Impatient",
-        resumo: "Modern Java introduces major enhancements that impact the core Java technologies and APIs at the heart of the Java platform",
-        autores: ["Cay Horstmann"]
-    }
-];
+const baseURL = "http://localhost:3030/livros";
+
+interface LivroMongo {
+    _id: String | null;
+    codEditora: Number;
+    titulo: String;
+    resumo: String;
+    autores: String[];
+}
 
 class ControleLivros {
 
-    public obterLivros() {
-        return livros;
+    public async obterLivros() {
+        const response = await fetch(baseURL);
+        const livrosMongo: LivroMongo[] = await response.json();
+        return livrosMongo.map(livro => ({
+            _id: livro._id,
+            codEditora: livro.codEditora,
+            titulo: livro.titulo,
+            resumo: livro.resumo,
+            autores: livro.autores
+        }));;
     }
 
-    public incluir(livro: Livro) {
-        livro.codigo = livros[livros.length - 1].codigo + 1;
-        livros.push(livro);
+    async incluir(livro: Livro) {
+        const livroMongo: LivroMongo = {
+          _id: null,
+          codEditora: livro.codEditora,
+          titulo: livro.titulo,
+          resumo: livro.resumo,
+          autores: livro.autores
+        };
+        const response = await fetch(baseURL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(livroMongo)
+        });
+        return response.ok;
     }
 
-    public excluir(codigo: number) {
-        livros.splice(livros.findIndex(livro => livro.codigo === codigo), 1);
+    async excluir(codigo: String) {
+        const response = await fetch(
+            `${baseURL}/${codigo}`, 
+            { method: 'DELETE' }
+        );
+        return response.ok;
     }
 }
 
