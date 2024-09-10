@@ -9,11 +9,7 @@ interface LivroMongo {
   autores: String[];
 }
 
-// PARA A MISSÃO PRÁTICA
-// const baseURL = 'http://localhost:3030/livros';
-
-// PARA DEPLOY
-const baseURL = 'https://rest-api-library-server.up.railway.app/livros';
+const baseURL = 'http://localhost:3030/livros';
 
 @Injectable({
   providedIn: 'root'
