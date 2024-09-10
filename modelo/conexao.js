@@ -13,7 +13,7 @@ const options = {
 
 // PARA DEPLOY
 const conectarBanco = async () => {
-    await banco.connect("mongodb://localhost:27017/livraria", options)
+    await banco.connect("mongodb.railway.internal/livraria", options)
     .then(() => {console.log("Conectado ao MongoDB!");})
     .catch((error) => console.log(`Erro: ${error}}`));;
 }
